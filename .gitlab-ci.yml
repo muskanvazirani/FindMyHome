@@ -1,0 +1,115 @@
+stages:
+  - code-quality
+  - test
+  - build
+  - deploy
+
+code-quality: 
+  stage: code-quality
+  image: maven:latest
+  script:
+    - wget "https://www.designite-tools.com/static/download/DJE/DesigniteJava.jar"
+    - mkdir code-reports
+    - echo "Starting Code Quality Checks"
+    - java -jar DesigniteJava.jar -i Backend/group17/ -o code-reports/
+    - echo "Code Quality Complete"
+  artifacts:
+    paths:
+    - code-reports/ArchitectureSmells.csv
+    - code-reports/DesignSmells.csv
+    - code-reports/ImplementationSmells.csv
+    - code-reports/MethodMetrics.csv
+    - code-reports/TestabilitySmells.csv
+    - code-reports/TestSmells.csv
+    - code-reports/TypeMetrics.csv
+  tags:
+    - group17
+
+backend-test:
+  stage: test
+  image: maven:latest
+  script:
+    - cd Backend/group17
+    - echo "Running Tests"
+    - mvn verify
+    - echo "Testing Completed"
+  artifacts: 
+      paths:
+        - Backend/group17/target/surefire-reports
+      reports:
+        junit:
+          - Backend/group17/target/surefire-reports/TEST-*.xml
+  tags:
+    - group17
+
+backend-build:
+  stage: build
+  image: maven:latest
+  script: 
+    - cd Backend/group17
+    - echo "Building Application"
+    - mvn clean package
+    - echo "Building Complete"
+  dependencies:
+    - backend-test
+  artifacts:
+      paths:
+        - Backend/group17/target
+  tags:
+    - group17
+
+frontend-build:
+  stage: build
+  image: node:latest
+  script:
+      - cd Frontend/react-group17
+      - echo "Starting Frontend Build"
+      - npm install
+      - npm run build
+      - echo "Frontend Build Completed"
+  artifacts:
+    paths:
+      - Frontend/react-group17/build
+  tags:
+    - group17
+  
+backend-deploy:
+  stage: deploy
+  image: docker:latest
+  before_script:
+    - chmod og-rwx ${SSH_PRIVATE_KEY}
+  script:
+    - echo "Starting Backend Deployment"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} date
+    - echo "Remote Server Online"
+    - echo "Transfering Backend Artifiacts"
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} Backend/group17/target/*.jar ${SSH_USER}@${SSH_HOST}:/home/$SSH_USER/FindMyHome/FindMyHome.jar
+    - echo "Artifacts Transfered"
+    - echo "Starting Docker Container"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} "sudo docker stop findmyhome || true"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} "sudo docker rm findmyhome || true"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} "cd /home/$SSH_USER/FindMyHome/ && sudo docker build -t findmyhome:latest -f dockerfile ."
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} "sudo docker run -d --name findmyhome -p 8080:8080 findmyhome"
+    - echo "Backend Deployment Complete"
+  tags:
+    - group17
+  only:
+    - dev
+    - main
+  
+frontend-deploy:
+  stage: deploy
+  image: docker:latest
+  before_script:
+    - chmod og-rwx ${SSH_PRIVATE_KEY}
+  script:
+    - echo "Starting Frontend Deployment"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOST} rm -r /var/www/html/*
+    - echo "Transfering Frontend Build Files"
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} Frontend/react-group17/build/* ${SSH_USER}@${SSH_HOST}:/var/www/html/
+    - echo "Frontend Deplyoment Complete"
+  tags:
+    - group17
+  only:
+    - dev
+    - main

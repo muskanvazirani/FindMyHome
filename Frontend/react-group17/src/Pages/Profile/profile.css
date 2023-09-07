@@ -1,0 +1,7 @@
+.text-muted:focus {
+    background-color: lightblue;
+}
+
+.text-muted:hover {
+    background-color: lightblue;
+}

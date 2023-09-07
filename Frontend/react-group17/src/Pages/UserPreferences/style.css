@@ -1,0 +1,47 @@
+.form {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 550px;
+    margin: 40px auto;
+    padding: 30px;
+  }
+  
+  .form-body {
+    text-align: left;
+    padding: 20px 10px;
+  }
+  
+  .form-body > * {
+    padding: 5px;
+  }
+  
+  .form__label {
+    width: 40%;
+  }
+  
+  .form_input {
+    width: 60%;
+  }
+  
+  .footer {
+    text-align: center;
+  }
+  
+  .ant-divider-horizontal.ant-divider-with-text-left > span {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #1890ff;
+  }
+  
+  .ant-form-item-label > label {
+    font-size: 1em;
+    font-weight: 500;
+  }
+  
+  .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    font-weight: 600;
+  }
+  
