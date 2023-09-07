@@ -52,7 +52,7 @@ The steps to install the application and run it.
 Clone the repository:
 
 ```bash
-git clone https://git.cs.dal.ca/courses/2023-winter/csci-5308/group17/
+git clone https://github.com/muskanvazirani/FindMyHome
 ```
 
 Install the necessary dependencies:
@@ -60,7 +60,7 @@ Install the necessary dependencies:
 For the frontend (React JS), navigate to the frontend directory:
 
 ```bash
-cd group17/Frontend/react-group17/
+cd FindMyHome/Frontend/react-group17/
 ```
 
 and run:
@@ -72,7 +72,7 @@ npm install
 For the backend, navigate to the backend directory:
 
 ```bah
-cd group17/Backend/group17/
+cd FindMyHome/Backend/group17/
 ```
 
 and run:
@@ -109,7 +109,7 @@ npm start
 For the backend (Spring Boot), navigate to the backend directory:
 
 ```bash
-cd group17/Backend/group17/
+cd FindMyHome/Backend/group17/
 ```
 
 and run:
@@ -121,7 +121,7 @@ mvn clean install
 This will create a jar file inside the target folder, move to the target folder:
 
 ```bash
-cd group17/Backend/group17/target/
+cd FindMyHome/Backend/group17/target/
 ```
 
 and run the jar file:
