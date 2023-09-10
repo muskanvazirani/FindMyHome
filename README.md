@@ -215,3 +215,8 @@ We have covered around 69% of the unit tests cases
 
 - Sreya Gajjipara - B00922295 - sr228618@dal.ca
 
+## Member Contribution
+
+![image](https://github.com/muskanvazirani/FindMyHome/assets/38426217/8e8aff55-3475-4c7d-a085-4f411274dea9)
+
+
